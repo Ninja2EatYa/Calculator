@@ -1,132 +1,160 @@
 import tkinter as tk
+from tkinter import ttk
 
 
 res = None
 operator = ''
+input_text = ''
 
 
-def get_values():
-    try:
-        return int(number_entry.get())
-    except ValueError:
-        return 0
+def press_num(num):
+    global input_text
+    if len(input_text) < 13:
+        input_text += str(num)
+        update_display(input_text)
 
 
-def insert_values(value):
-    answer_entry.delete(0, 'end')
-    answer_entry.insert(0, str(value))
+def update_display(value):
+    number_entry.delete(0, 'end')
+    number_entry.insert('end', value)
 
 
 def add():
-    global res, operator
-    operator = '+'
-    res = get_values()
-    number_entry.delete(0, 'end')
+    global res, operator, input_text
+    if input_text:
+        res = float(input_text)
+        operator = '+'
+        input_text = ''
+        update_display(res)
 
 
 def sub():
-    global res, operator
-    operator = '-'
-    res = get_values()
-    number_entry.delete(0, 'end')
+    global res, operator, input_text
+    if input_text:
+        res = float(input_text)
+        operator = '-'
+        input_text = ''
+        update_display(res)
 
 
 def div():
-    global res, operator
-    operator = '/'
-    res = get_values()
-    number_entry.delete(0, 'end')
+    global res, operator, input_text
+    if input_text:
+        res = float(input_text)
+        operator = '/'
+        input_text = ''
+        update_display(res)
 
 
 def mul():
-    global res, operator
-    operator = '*'
-    res = get_values()
-    number_entry.delete(0, 'end')
+    global res, operator, input_text
+    if input_text:
+        res = float(input_text)
+        operator = '*'
+        input_text = ''
+        update_display(res)
 
 
 def clear():
-    global res, operator
+    global res, operator, input_text
     res = None
     operator = ''
-    number_entry.delete(0, 'end')
-    answer_entry.delete(0, 'end')
+    input_text = ''
+    update_display('')
+
+
+def backspace():
+    global input_text
+    input_text = input_text[:-1]
+    update_display(input_text)
+
+
+def percent():
+    global input_text
+    if input_text:
+        try:
+            input_text = str(float(input_text) / 100)
+            update_display(input_text)
+        except ValueError:
+            update_display('Ошибка')
+
+def memory():
+    global input_text
+    pass
 
 
 def calculate():
-    global res, operator
-    num2 = get_values()
-    if res is None or operator == '':
-        return
-    try:
-        if operator == "+":
-            res += num2
-        elif operator == "-":
-            res -= num2
-        elif operator == "*":
-            res *= num2
-        elif operator == "/":
-            if num2 == 0:
-                insert_values("Ошибка")
-                return
-            res /= num2
-        insert_values(res)
-        number_entry.delete(0, 'end')
-    except Exception as e:
-        insert_values("Ошибка")
-
-
-def press_number(num):
-    number_entry.insert('end', str(num))
+    global res, operator, input_text
+    if input_text and res is not None:
+        try:
+            num2 = float(input_text)
+            if operator == '+':
+                res += num2
+            elif operator == '-':
+                res -= num2
+            elif operator == '*':
+                res *= num2
+            elif operator == '/':
+                if num2 == 0:
+                    update_display('Ошибка')
+                    return
+                res /= num2
+            input_text= str(res)
+            update_display(input_text)
+        except Exception as e:
+            update_display('Ошибка')
 
 
 window = tk.Tk()
 window.title('Калькулятор')
-window.geometry('200x330')
+window.geometry('400x600')
 window.resizable(False, False)
+window.configure(bg='black')
 
-button_ADD = tk.Button(window, text='+', width=4, height=2, command=add, background='grey', activebackground='grey')
-button_ADD.place(x=20, y=80)
-button_SUB = tk.Button(window, text='-', width=4, height=2, command=sub, background='grey', activebackground='grey')
-button_SUB.place(x=20, y=120)
-button_MUL = tk.Button(window, text='*', width=4, height=2, command=mul, background='grey', activebackground='grey')
-button_MUL.place(x=20, y=160)
-button_DIV = tk.Button(window, text='/', width=4, height=2, command=div, background='grey', activebackground='grey')
-button_DIV.place(x=20, y=200)
+number_entry = tk.Entry(window, width=15, justify='right', font=('Avenir Next Cyr Thin', 30), bd=0, bg='black', fg='white')
+number_entry.place(x=10, y=20)
 
-button_CLEAR = tk.Button(window, text='C', width=4, height=2, command=clear)
-button_CLEAR.place(x=60, y=200)
-button_1 = tk.Button(window, text='1', width=4, height=2, command=lambda: press_number(1))
-button_1.place(x=60, y=80)
-button_2 = tk.Button(window, text='2', width=4, height=2, command=lambda: press_number(2))
-button_2.place(x=100, y=80)
-button_3 = tk.Button(window, text='3', width=4, height=2, command=lambda: press_number(3))
-button_3.place(x=140, y=80)
-button_4 = tk.Button(window, text='4', width=4, height=2, command=lambda: press_number(4))
-button_4.place(x=60, y=120)
-button_5 = tk.Button(window, text='5', width=4, height=2, command=lambda: press_number(5))
-button_5.place(x=100, y=120)
-button_6 = tk.Button(window, text='6', width=4, height=2, command=lambda: press_number(6))
-button_6.place(x=140, y=120)
-button_7 = tk.Button(window, text='7', width=4, height=2, command=lambda: press_number(7))
-button_7.place(x=60, y=160)
-button_8 = tk.Button(window, text='8', width=4, height=2, command=lambda: press_number(8))
-button_8.place(x=100, y=160)
-button_9 = tk.Button(window, text='9', width=4, height=2, command=lambda: press_number(9))
-button_9.place(x=140, y=160)
-button_0 = tk.Button(window, text='0', width=4, height=2, command=lambda: press_number(0))
-button_0.place(x=100, y=200)
-button_equal = tk.Button(window, text='=', width=4, height=2, command=calculate)
-button_equal.place(x=140, y=200)
+separator = tk.Canvas(window, width=400, height=1, bg='white', highlightthickness=0)
+separator.place(x=0, y=98)
 
-number_entry = tk.Entry(window, width=26)
-number_entry.place(x=20, y=40)
-answer_entry = tk.Entry(window, width=26)
-answer_entry.place(x=20, y=280)
+buttons = [
+    ('C', 0, 100, clear),
+    ('CE', 100, 100, backspace),
+    ('%', 200, 100, percent),
+    ('/', 300, 100, div),
+    ('7', 0, 200, lambda: press_num(7)),
+    ('8', 100, 200, lambda: press_num(8)),
+    ('9', 200, 200, lambda: press_num(9)),
+    ('*', 300, 200, mul),
+    ('4', 0, 300, lambda: press_num(4)),
+    ('5', 100, 300, lambda: press_num(5)),
+    ('6', 200, 300, lambda: press_num(6)),
+    ('-', 300, 300, sub),
+    ('1', 0, 400, lambda: press_num(1)),
+    ('2', 100, 400, lambda: press_num(2)),
+    ('3', 200, 400, lambda: press_num(3)),
+    ('+', 300, 400, add),
+    ('MR', 0, 500, memory),
+    ('0', 100, 500, lambda: press_num(0)),
+    ('.', 200, 500, lambda: press_num('.')),
+    ('=', 300, 500, calculate)
+]
 
-number_name = tk.Label(window, text='Введите число:')
-number_name.place(x=20, y=10)
-answer_name = tk.Label(window, text='Ответ:')
-answer_name.place(x=20, y=250)
+style = ttk.Style()
+style.theme_use('clam')
+style.configure('Rounded.TButton',
+                font=('Avenir Next Cyr Thin', 30),
+                background='#000000',  # Не работает в ttk, но поможет для системных тем
+                foreground='white',
+                borderwidth=1,
+                padding=10,
+                relief='flat')
+
+style.map('Rounded.TButton',
+          background=[('active', '#222222')],
+          foreground=[('active', 'white')])
+
+for text, x, y, command in buttons:
+    ttk.Button(window, text=text, style='Rounded.TButton', command=command).place(x=x, y=y, width=100, height=100)
 
 window.mainloop()
