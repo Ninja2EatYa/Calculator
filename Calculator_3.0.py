@@ -97,7 +97,7 @@ def percent():
             elif operator == '+' and res is not None:
                 input_text = str(res + (res * num / 100))
             else:
-                input_text = str(num / 100)  # Обычное деление на 100 (если нет операции)
+                input_text = str(num / 100)
             update_display(input_text)
         except ValueError:
             update_display('Ошибка')
@@ -177,23 +177,34 @@ buttons = [
 
 style = ttk.Style()
 style.theme_use('clam')
-style.configure('Rounded.TButton',
-                font=('Avenir Next Cyr Thin', 30),
-                background='#000000',  # Не работает в ttk, но поможет для системных тем
+style.configure('Regular.TButton',
+                font=('Avenir Next Cyr Thin', 26),
+                background='#000000',
                 foreground='white',
                 borderwidth=1,
                 padding=10,
                 relief='flat')
-
-style.map('Rounded.TButton',
+style.map('Regular.TButton',
           background=[('active', '#222222')],
-          foreground=[('active', 'white')])
+          foreground=[('active', 'red')])
 
-memory_text = tk.StringVar(value='MR+')
-memory_button = ttk.Button(window, textvariable=memory_text, style='Rounded.TButton', command=memory)
-memory_button.place(x=0, y=500, width=100, height=100)
+style.configure('Orange.TButton',
+                font=('Avenir Next Cyr Thin', 26),
+                background='#000000',
+                foreground='darkorange',
+                borderwidth=1,
+                padding=10,
+                relief='flat')
+style.map('Orange.TButton',
+          background=[('active', '#222222')],
+          foreground=[('active', 'red')])
 
 for text, x, y, command in buttons:
-    ttk.Button(window, text=text, style='Rounded.TButton', command=command).place(x=x, y=y, width=100, height=100)
+    button_style = 'Orange.TButton' if text in ['/', '-', '+', '*', '=', '%', 'C', 'CE'] else 'Regular.TButton'
+    ttk.Button(window, text=text, style=button_style, command=command).place(x=x, y=y, width=100, height=100)
+    memory_text = tk.StringVar(value='MR+')
+    memory_button = ttk.Button(window, textvariable=memory_text, style=button_style, command=memory)
+    memory_button.place(x=0, y=500, width=100, height=100)
+
 
 window.mainloop()
