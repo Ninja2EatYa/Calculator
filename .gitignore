@@ -1,0 +1,10 @@
+.env
+.venv/
+.idea/
+__pycache__/
+*.pyc
+add-ons.py
+/dist
+Calculator_4.0.py
+Calculator_5.0.py
+
